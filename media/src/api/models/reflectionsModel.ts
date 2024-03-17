@@ -10,7 +10,7 @@ const getReflectionsByUser = async (
     const [rows] = await promisePool.query<
       RowDataPacket[] & ReflectionWithPrompt[]
     >(
-      'SELECT * FROM userreflections LEFT JOIN reflectionprompts ON userreflections.prompt_id = reflectionprompts.prompt_id WHERE user_id = ?',
+      'SELECT * FROM UserReflections LEFT JOIN ReflectionPrompts ON UserReflections.prompt_id = ReflectionPrompts.prompt_id WHERE user_id = ?',
       [id],
     );
     if (rows.length === 0) {
@@ -27,7 +27,7 @@ const getReflectionsByUser = async (
 const getAllReflections = async (): Promise<Reflection[] | null> => {
   try {
     const [rows] = await promisePool.query<RowDataPacket[] & Reflection[]>(
-      'SELECT * FROM userreflections'
+      'SELECT * FROM UserReflections'
     );
     if (rows.length === 0) {
       return null;
@@ -46,11 +46,11 @@ const createReflection = async (
 ): Promise<MessageResponse | null> => {
   const params = [reflection_text, user_id, prompt_id];
   const sql =
-    'INSERT INTO userreflections (reflection_text, user_id, prompt_id) VALUES (?, ?, ?)';
+    'INSERT INTO UserReflections (reflection_text, user_id, prompt_id) VALUES (?, ?, ?)';
   try {
     const result = await promisePool.query<ResultSetHeader>(sql, params);
     const [rows] = await promisePool.query<RowDataPacket[] & Reflection[]>(
-      'SELECT * FROM userreflections WHERE reflection_id = ?',
+      'SELECT * FROM UserReflections WHERE reflection_id = ?',
       [result[0].insertId]
     );
     if (rows.length === 0) {
@@ -67,7 +67,7 @@ const createReflection = async (
 const fetchPrompts = async (): Promise<Prompt[] | null> => {
   try {
     const [rows] = await promisePool.query<RowDataPacket[] & Prompt[]>(
-      'SELECT * FROM reflectionprompts'
+      'SELECT * FROM ReflectionPrompts'
     );
     if (rows.length === 0) {
       return null;

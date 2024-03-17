@@ -31,7 +31,7 @@ const getAllPosts = async (): Promise<PostWithOwner[] | null> => {
 const getPostById = async (id: number): Promise<Post | null> => {
   const uploadUrl = process.env.UPLOAD_URL;
   try {
-    const sql = `SELECT *, CONCAT(? , filename) AS filename, CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail FROM posts WHERE post_id = ?`;
+    const sql = `SELECT *, CONCAT(? , filename) AS filename, CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail FROM Posts WHERE post_id = ?`;
     const params = [uploadUrl, uploadUrl, id];
     const [rows] = await promisePool.query<RowDataPacket[] & Post[]>(
       sql,
@@ -64,7 +64,7 @@ const postPost = async (
   try {
     const result = await promisePool.query<ResultSetHeader>(sql, params);
     const [rows] = await promisePool.query<RowDataPacket[] & Post[]>(
-      `SELECT * FROM posts WHERE post_id = ?`,
+      `SELECT * FROM Posts WHERE post_id = ?`,
       [result[0].insertId],
     );
     console.log('rows', rows);
@@ -89,13 +89,13 @@ const putPost = async (
     let sql = ``;
     let params: (string | number)[] = [];
     if (post_title && post_text) {
-      sql = `UPDATE posts SET post_title = ?, post_text = ? WHERE post_id = ? AND user_id = ?`;
+      sql = `UPDATE Posts SET post_title = ?, post_text = ? WHERE post_id = ? AND user_id = ?`;
       params = [post_title, post_text, id, user_id];
     } else if (post_title) {
-      sql = `UPDATE posts SET post_title = ? WHERE post_id = ? AND user_id = ?`;
+      sql = `UPDATE Posts SET post_title = ? WHERE post_id = ? AND user_id = ?`;
       params = [post_title, id, user_id];
     } else if (post_text) {
-      sql = `UPDATE posts SET post_text = ? WHERE post_id = ? AND user_id = ?`;
+      sql = `UPDATE Posts SET post_text = ? WHERE post_id = ? AND user_id = ?`;
       params = [post_text, id, user_id];
     }
     console.log('sql', sql);
@@ -135,7 +135,7 @@ const deletePost = async (
     await connection.beginTransaction();
     // add likes and comments delete
     const sql = connection.format(
-      `DELETE FROM posts WHERE post_id = ? AND user_id = ?`,
+      `DELETE FROM Posts WHERE post_id = ? AND user_id = ?`,
       [post_id, user_id],
     );
 

@@ -8,7 +8,7 @@ const getComments = async (): Promise<CommentWithOwner[] | null> => {
     const [rows] = await promisePool.query<
       RowDataPacket[] & CommentWithOwner[]
     >(
-      'SELECT comments.*, users.username FROM comments JOIN Users ON Comments.user_id = Users.user_id;',
+      'SELECT comments.*, Users.username FROM Comments JOIN Users ON Comments.user_id = Users.user_id;',
     );
     if (rows.length === 0) {
       return null;
@@ -60,7 +60,7 @@ const getCommentsCountByPostId = async (id: number): Promise<number | null> => {
 const getCommentsByUserId = async (id: number): Promise<Comment[] | null> => {
   try {
     const [rows] = await promisePool.query<RowDataPacket[] & Comment[]>(
-      'SELECT * FROM comments WHERE user_id = ?',
+      'SELECT * FROM Comments WHERE user_id = ?',
       [id],
     );
     if (rows.length === 0) {
@@ -78,12 +78,12 @@ const createComment = async (
 ): Promise<Comment | null> => {
   console.log('comment', comment);
   const sql =
-    'INSERT INTO comments (post_id, user_id, comment_text) VALUES (?, ?, ?)';
+    'INSERT INTO Comments (post_id, user_id, comment_text) VALUES (?, ?, ?)';
   const params = [comment.post_id, comment.user_id, comment.comment_text];
   try {
     const result = await promisePool.query<ResultSetHeader>(sql, params);
     const [rows] = await promisePool.query<RowDataPacket[] & Comment[]>(
-      'SELECT * FROM comments WHERE comment_id = ?',
+      'SELECT * FROM Comments WHERE comment_id = ?',
       [result[0].insertId],
     );
     if (rows.length === 0) {
@@ -102,7 +102,7 @@ const deleteCommentById = async (
 ): Promise<MessageResponse | null> => {
   try {
     const [rows] = await promisePool.query<ResultSetHeader>(
-      'DELETE FROM comments WHERE comment_id = ? AND user_id = ?',
+      'DELETE FROM Comments WHERE comment_id = ? AND user_id = ?',
       [comment_id, user_id],
     );
     if (rows.affectedRows === 0) {
