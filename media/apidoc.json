@@ -1,0 +1,13 @@
+{
+  "name": "Hybrid server, media server",
+  "version": "1.0.0",
+  "description": "For MeCrafter",
+  "title": "Media server",
+  "url": "/api/v1",
+  "template": {
+    "withCompare": true,
+    "withGenerator": true
+  },
+  "exclude": ["node_modules/, public/"],
+  "files": ["src/*/.ts"]
+}

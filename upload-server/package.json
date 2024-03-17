@@ -1,0 +1,44 @@
+{
+  "name": "upload-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node dist/upload-server/src/index.js",
+    "dev": "nodemon src/index.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "exif": "^0.6.0",
+    "express": "^4.18.3",
+    "express-validator": "^7.0.1",
+    "fluent-ffmpeg": "^2.1.2",
+    "helmet": "^7.1.0",
+    "jimp": "^0.22.12",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/fluent-ffmpeg": "^2.1.24",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/morgan": "^1.9.9",
+    "@types/multer": "^1.4.11",
+    "@types/sharp": "^0.32.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "eslint": "^8.57.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "gts": "^5.2.0",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
+  }
+}
