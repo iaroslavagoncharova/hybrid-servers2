@@ -9,6 +9,8 @@ import {
   getCreatedHabits,
   createFrequency,
   updateHabit,
+  getHabitDates,
+  addHabitDate,
 } from '../models/habitModel';
 import {
   FrequencyResponse,
@@ -176,6 +178,56 @@ const putHabit = async (
   }
 };
 
+const postDates = async (
+  req: Request<{id: string}, {}, {date: string}>,
+  res: Response<MessageResponse>,
+  next: NextFunction
+) => {
+  try {
+    const habit_id = Number(req.params.id);
+    const date = req.body.date;
+    if (!habit_id || !date) {
+      next(new CustomError('Missing required fields', 400));
+      return;
+    }
+    const tokenUser = res.locals.user;
+    const updatedHabit = await addHabitDate(habit_id, tokenUser.user_id, date);
+    if (!updatedHabit) {
+      next(new CustomError('Date not added', 404));
+      return;
+    }
+    const response: MessageResponse = {
+      message: 'Date added',
+    };
+    res.json(response);
+  } catch (e) {
+    next(new CustomError((e as Error).message, 500));
+  }
+};
+
+const getDates = async (
+  req: Request<{id: string}>,
+  res: Response<string[]>,
+  next: NextFunction
+) => {
+  try {
+    const habit_id = req.params.id;
+    if (!habit_id) {
+      next(new CustomError('No habit id provided', 400));
+      return;
+    }
+    const tokenUser = res.locals.user;
+    const dates = await getHabitDates(Number(habit_id), tokenUser.user_id);
+    if (!dates) {
+      next(new CustomError('Dates not found', 404));
+      return;
+    }
+    res.json(dates);
+  } catch (e) {
+    next(new CustomError((e as Error).message, 500));
+  }
+};
+
 export {
   getAllHabits,
   getHabit,
@@ -184,4 +236,6 @@ export {
   getCreatedHabit,
   postFrequency,
   putHabit,
+  postDates,
+  getDates,
 };

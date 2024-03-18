@@ -4,6 +4,7 @@ import {User, UserHabits} from '@sharedTypes/DBTypes';
 import {getUserById} from './userModel';
 import {parse} from 'path';
 import { getHabit } from '../controllers/habitController';
+import {MessageResponse} from '@sharedTypes/MessageTypes';
 
 const getHabits = async (): Promise<UserHabits[] | null> => {
   try {
@@ -130,7 +131,7 @@ const createFrequency = async (frequency: string, user_id: number) => {
 };
 
 const updateHabit = async (
-  habit_id: string,
+  habit_id: number,
   user_id: number
 ) => {
   try {
@@ -150,6 +151,42 @@ const updateHabit = async (
   }
 };
 
+const addHabitDate = async (habit_id: number, user_id: number, completed_date: string): Promise<MessageResponse> => {
+  try {
+    const insertResult = await promisePool.execute<ResultSetHeader>(
+      'INSERT INTO HabitDates (habit_id, user_id, completed_date) VALUES (?, ?, ?)',
+      [habit_id, user_id, completed_date]
+    );
+
+    if (insertResult[0].affectedRows === 0) {
+      throw new Error('Date not added');
+    }
+    const response: MessageResponse = {
+      message: 'Date added',
+    };
+    return response;
+  } catch (e) {
+    throw new Error((e as Error).message);
+  }
+};
+
+const getHabitDates = async (habit_id: number, user_id: number): Promise<string[] | null> => {
+  try {
+    const [result] = await promisePool.execute<RowDataPacket[] & string[]>(
+      'SELECT HabitDates.completed_date FROM HabitDates WHERE HabitDates.habit_id = ? AND HabitDates.user_id = ?',
+      [habit_id, user_id]
+    );
+    if (result.length === 0) {
+      return null;
+    }
+    const dates = result.map((row: any) => row.completed_date);
+    console.log(dates, 'dates');
+    return dates;
+  } catch (e) {
+    throw new Error((e as Error).message);
+  }
+};
+
 export {
   getCreatedHabits,
   getCreatedHabitById,
@@ -158,4 +195,6 @@ export {
   getHabitById,
   createFrequency,
   updateHabit,
+  addHabitDate,
+  getHabitDates,
 };
