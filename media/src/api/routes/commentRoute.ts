@@ -98,50 +98,6 @@ commentRouter
   );
 
 commentRouter
-  .route('/:id')
-  /**
-   * @api {delete} /comments/:id Delete a comment
-   * @apiName DeleteComment
-   * @apiGroup Comments
-   * @apiVersion  1.0.0
-   * @apiPermission user
-   * @apiParam  {Number} id Comment id
-   * @apiHeader {String} Authorization Bearer token
-   * @apiSuccess (200) {String} message Comment deleted
-   * @apiSuccessExample {json} Success-Response:
-   * {
-   *  "message": "Comment deleted"
-   * }
-   * @apiErrorExample {json} Error
-   * HTTP/1.1 500 Internal Server Error
-   * {
-   *  "error": "Comment not deleted"
-   * }
-   */
-  .delete(authenticate, deleteComment)
-  /**
-   * @api {put} /comments/:id Update a comment
-   * @apiName UpdateComment
-   * @apiGroup Comments
-   * @apiVersion  1.0.0
-   * @apiPermission user
-   * @apiParam  {Number} id Comment id
-   * @apiParam  {String} comment_text Comment text
-   * @apiHeader {String} Authorization Bearer token
-   * @apiSuccess (200) {String} message Comment updated
-   * @apiSuccessExample {json} Success-Response:
-   * {
-   *  "message": "Comment updated"
-   * }
-   * @apiErrorExample {json} Error
-   * HTTP/1.1 500 Internal Server Error
-   * {
-   *  "error": "Comment not updated"
-   * }
-   */
-  .put(authenticate, updateComment);
-
-commentRouter
   .route('/bypost/:id')
   /**
    * @api {get} /comments/bypost/:id Get comments by post id
@@ -249,4 +205,47 @@ commentRouter
    */
   .get(getCommentsCountForPost);
 
+commentRouter
+  .route('/:id')
+  /**
+   * @api {delete} /comments/:id Delete a comment
+   * @apiName DeleteComment
+   * @apiGroup Comments
+   * @apiVersion  1.0.0
+   * @apiPermission user
+   * @apiParam  {Number} id Comment id
+   * @apiHeader {String} Authorization Bearer token
+   * @apiSuccess (200) {String} message Comment deleted
+   * @apiSuccessExample {json} Success-Response:
+   * {
+   *  "message": "Comment deleted"
+   * }
+   * @apiErrorExample {json} Error
+   * HTTP/1.1 500 Internal Server Error
+   * {
+   *  "error": "Comment not deleted"
+   * }
+   */
+  .delete(authenticate, deleteComment)
+  /**
+   * @api {put} /comments/:id Update a comment
+   * @apiName UpdateComment
+   * @apiGroup Comments
+   * @apiVersion  1.0.0
+   * @apiPermission user
+   * @apiParam  {Number} id Comment id
+   * @apiParam  {String} comment_text Comment text
+   * @apiHeader {String} Authorization Bearer token
+   * @apiSuccess (200) {String} message Comment updated
+   * @apiSuccessExample {json} Success-Response:
+   * {
+   *  "message": "Comment updated"
+   * }
+   * @apiErrorExample {json} Error
+   * HTTP/1.1 500 Internal Server Error
+   * {
+   *  "error": "Comment not updated"
+   * }
+   */
+  .put(authenticate, updateComment);
 export default commentRouter;
