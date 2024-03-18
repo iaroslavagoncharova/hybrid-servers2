@@ -99,14 +99,14 @@ const createComment = async (
 const deleteCommentById = async (
   comment_id: number,
   user_id: number,
-): Promise<MessageResponse | null> => {
+): Promise<MessageResponse> => {
   try {
     const [rows] = await promisePool.query<ResultSetHeader>(
       'DELETE FROM Comments WHERE comment_id = ? AND user_id = ?',
       [comment_id, user_id],
     );
     if (rows.affectedRows === 0) {
-      return null;
+      throw new Error('Comment not deleted');
     }
     return {message: 'Comment deleted'};
   } catch (error) {

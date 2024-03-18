@@ -109,7 +109,8 @@ const deleteComment = async (
       res.json({message: 'Comment deleted'});
       return;
     }
-    next(new CustomError('Comment not deleted', 500));
+    const error = new CustomError('Comment not deleted', 500);
+    next(error);
   } catch (error) {
     next(error);
   }
