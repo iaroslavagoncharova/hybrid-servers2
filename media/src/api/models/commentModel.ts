@@ -8,7 +8,7 @@ const getComments = async (): Promise<CommentWithOwner[] | null> => {
     const [rows] = await promisePool.query<
       RowDataPacket[] & CommentWithOwner[]
     >(
-      'SELECT comments.*, Users.username FROM Comments JOIN Users ON Comments.user_id = Users.user_id;',
+      'SELECT Comments.*, Users.username FROM Comments JOIN Users ON Comments.user_id = Users.user_id;',
     );
     if (rows.length === 0) {
       return null;
@@ -27,7 +27,7 @@ const getCommentsByPostId = async (
     const [rows] = await promisePool.query<
       RowDataPacket[] & CommentWithOwner[]
     >(
-      'SELECT comments.*, Users.username FROM Comments JOIN Users ON Comments.user_id = Users.user_id WHERE Comments.post_id = ?;',
+      'SELECT Comments.*, Users.username FROM Comments JOIN Users ON Comments.user_id = Users.user_id WHERE Comments.post_id = ?;',
       [id],
     );
     if (rows.length === 0) {
