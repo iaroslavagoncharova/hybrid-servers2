@@ -187,6 +187,25 @@ const getHabitDates = async (habit_id: number, user_id: number): Promise<string[
   }
 };
 
+const deleteHabitDates = async (habit_id: number, user_id: number): Promise<MessageResponse> => {
+  try {
+    const deleteResult = await promisePool.execute<ResultSetHeader>(
+      'DELETE FROM HabitDates WHERE HabitDates.habit_id = ? AND HabitDates.user_id = ?',
+      [habit_id, user_id]
+    );
+
+    if (deleteResult[0].affectedRows === 0) {
+      throw new Error('Dates not deleted');
+    }
+    const response: MessageResponse = {
+      message: 'Dates deleted',
+    };
+    return response;
+  } catch (e) {
+    throw new Error((e as Error).message);
+  }
+};
+
 export {
   getCreatedHabits,
   getCreatedHabitById,

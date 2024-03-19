@@ -48,6 +48,7 @@ const login = async (
       created_at: user.created_at,
       habit_id: user.habit_id,
       habit_frequency: user.habit_frequency,
+      habit_name: user.habit_name,
     };
 
     const tokenContent = {

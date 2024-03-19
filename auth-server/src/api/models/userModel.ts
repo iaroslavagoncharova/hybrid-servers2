@@ -40,7 +40,7 @@ const getUserById = async (id: number): Promise<UnauthorizedUser | null> => {
 const getUserByUsername = async (username: string): Promise<User | null> => {
   try {
     const [rows] = await promisePool.execute<RowDataPacket[] & User[]>(
-      'SELECT Users.user_id, Users.username, Users.email, Users.password, Users.created_at FROM Users WHERE Users.username = ?',
+      'SELECT Users.user_id, Users.username, Users.email, Users.password, Users.created_at, Users.habit_frequency, Users.habit_id, Habits.habit_name FROM Users LEFT JOIN Habits ON Users.habit_id = Habits.habit_id WHERE Users.username = ?',
       [username]
     );
     if (rows.length === 0) {
