@@ -4,7 +4,7 @@ import {ResultSetHeader, RowDataPacket} from 'mysql2';
 import {MessageResponse} from '@sharedTypes/MessageTypes';
 
 const getReflectionsByUser = async (
-  id: number
+  id: number,
 ): Promise<ReflectionWithPrompt[] | null> => {
   try {
     const [rows] = await promisePool.query<
@@ -27,7 +27,7 @@ const getReflectionsByUser = async (
 const getAllReflections = async (): Promise<Reflection[] | null> => {
   try {
     const [rows] = await promisePool.query<RowDataPacket[] & Reflection[]>(
-      'SELECT * FROM UserReflections'
+      'SELECT * FROM UserReflections',
     );
     if (rows.length === 0) {
       return null;
@@ -42,7 +42,7 @@ const getAllReflections = async (): Promise<Reflection[] | null> => {
 const createReflection = async (
   reflection_text: string,
   user_id: number,
-  prompt_id: number
+  prompt_id: number,
 ): Promise<MessageResponse | null> => {
   const params = [reflection_text, user_id, prompt_id];
   const sql =
@@ -51,7 +51,7 @@ const createReflection = async (
     const result = await promisePool.query<ResultSetHeader>(sql, params);
     const [rows] = await promisePool.query<RowDataPacket[] & Reflection[]>(
       'SELECT * FROM UserReflections WHERE reflection_id = ?',
-      [result[0].insertId]
+      [result[0].insertId],
     );
     if (rows.length === 0) {
       return null;
@@ -67,7 +67,7 @@ const createReflection = async (
 const fetchPrompts = async (): Promise<Prompt[] | null> => {
   try {
     const [rows] = await promisePool.query<RowDataPacket[] & Prompt[]>(
-      'SELECT * FROM ReflectionPrompts'
+      'SELECT * FROM ReflectionPrompts',
     );
     if (rows.length === 0) {
       return null;

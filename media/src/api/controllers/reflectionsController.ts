@@ -11,11 +11,12 @@ import {
   getAllReflections,
   getReflectionsByUser,
 } from '../models/reflectionsModel';
+import CustomError from '../../classes/CustomError';
 
 const getReflections = async (
   req: Request<{id: string}>,
   res: Response<ReflectionWithPrompt[], {user: TokenUser}>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await getReflectionsByUser(Number(req.params.id));
@@ -33,19 +34,19 @@ const getReflections = async (
 const postReflection = async (
   req: Request<{}, {}, Omit<Reflection, 'reflection_id'>>,
   res: Response<{message: string}, {user: TokenUser}>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await createReflection(
       req.body.reflection_text,
       res.locals.user.user_id,
-      req.body.prompt_id
+      req.body.prompt_id,
     );
     if (result) {
       res.json(result);
       return;
     }
-    const error = new Error('Reflection not created');
+    const error = new CustomError('Reflection not created', 404);
     next(error);
   } catch (error) {
     next(error);
@@ -55,7 +56,7 @@ const postReflection = async (
 const fetchAllReflections = async (
   req: Request,
   res: Response<Reflection[]>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await getAllReflections();
@@ -73,7 +74,7 @@ const fetchAllReflections = async (
 const fetchReflectionByUser = async (
   req: Request<{user_id: string}>,
   res: Response<Reflection[], {user: TokenUser}>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await getReflectionsByUser(res.locals.user.user_id);
@@ -93,7 +94,7 @@ const fetchReflectionByUser = async (
 const getPrompts = async (
   req: Request,
   res: Response<Prompt[]>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await fetchPrompts();
